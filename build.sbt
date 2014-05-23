@@ -21,5 +21,6 @@ buildInfoKeys := Seq[BuildInfoKey](
 buildInfoPackage := "nu.pattern.support"
 
 libraryDependencies ++= Seq(
-  "com.typesafe.scala-logging" %% "scala-logging-slf4j" % "2.1.2"
+  "com.typesafe.play" %% "play-json" % "2.2.3"
+  , "com.typesafe.scala-logging" %% "scala-logging-slf4j" % "2.1.2"
 )
