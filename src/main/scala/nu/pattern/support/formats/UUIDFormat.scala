@@ -12,7 +12,7 @@ object UUIDFormat extends Format[UUID] {
     case JsString(s) =>
       s.trim.toLowerCase match {
         case uuidP() =>
-          JsSuccess(UUID.fromString(s))
+          JsSuccess(UUID.fromString(s.trim))
         case _ =>
           JsError( s"""Incorrect UUID format for \"$s\".""")
       }

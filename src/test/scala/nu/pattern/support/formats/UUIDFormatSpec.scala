@@ -26,6 +26,10 @@ class UUIDFormatSpec extends Specification {
       s"""read as "$expected" (with mangled letter case)."""" in {
         UUIDFormat.reads(JsString(sample.toString.toUpperCase)) must equalTo(expected)
       }
+
+      s"""read as "$expected" (with padding whitespace)."""" in {
+        UUIDFormat.reads(JsString("  " + sample.toString + "  ")) must equalTo(expected)
+      }
     }
   }
 
