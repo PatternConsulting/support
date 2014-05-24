@@ -1,7 +1,5 @@
 package nu.pattern.support.maths
 
-import java.awt.Rectangle
-
 object Boxes {
 
   /**
