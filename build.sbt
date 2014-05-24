@@ -23,7 +23,8 @@ buildInfoPackage := "nu.pattern.support"
 resolvers += "Typesafe (releases)" at "http://repo.typesafe.com/typesafe/releases/"
 
 libraryDependencies ++= Seq(
-  "com.typesafe.play" %% "play-json" % "2.2.3"
+  "com.meetup" %% "archery" % "0.3.0"
+  , "com.typesafe.play" %% "play-json" % "2.2.3"
   , "com.typesafe.scala-logging" %% "scala-logging-slf4j" % "2.1.2"
   , "org.specs2" %% "specs2" % "2.3.12" % "test"
 )
