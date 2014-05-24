@@ -9,8 +9,6 @@ trait BoxLike[T, M] {
   def from(v: T): Box[M]
 
   def to(v: Box[M]): T
-
-  def toFloat(b: Box[M])(implicit ev: PointLike[M]): Box[Float] = Box(ev.toFloat(b.p0), ev.toFloat(b.p1))
 }
 
 object BoxLike {
