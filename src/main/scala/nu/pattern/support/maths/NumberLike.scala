@@ -21,4 +21,8 @@ object NumberLike {
 
   object IntRoundFloatNumberLike extends IntFloatNumberLike(Math.round)
 
+  class FloatIntNumberLike extends NumberLike[Int, Float] {
+    override def from(v: Int): Float = v.toFloat
+  }
+
 }
