@@ -1,9 +1,11 @@
 package nu.pattern.support.maths
 
+import archery.{Box => ArcheryBox}
+
 object Implicits {
 
-  implicit class BoxesOps[T, M](b: Seq[T])(implicit ev: BoxLike[T, M]) {
-    def intersections(implicit nev: Numeric[M], nlev: NumberLike[Float, M]) = Boxes.intersections(b)
+  implicit class BoxesOps[T, M](b: Seq[T]) {
+    def intersections()(implicit blev: BoxLike[T, M], ablev: BoxLike[ArcheryBox, M], nev: Numeric[M]) = Boxes.intersections(b)
   }
 
 }

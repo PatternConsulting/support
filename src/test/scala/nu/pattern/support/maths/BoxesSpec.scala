@@ -1,10 +1,12 @@
 package nu.pattern.support.maths
 
-import org.specs2.mutable._
 import java.awt.Rectangle
 
+import org.specs2.mutable._
+
+import Boxes._
+
 class BoxesSpec extends Specification {
-  implicit val nlev = NumberLike.IntRoundFloatNumberLike
 
   val r0 = new Rectangle(10, 10, 100, 100)
   val r1 = new Rectangle(20, 20, 200, 200)
@@ -17,4 +19,5 @@ class BoxesSpec extends Specification {
   val s1 = Seq(b0, b1)
 
   Boxes.intersections(s1)
+
 }

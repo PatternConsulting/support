@@ -1,9 +1,8 @@
 package nu.pattern.support.maths
 
+import archery.{Box => ArcheryBox, Geom}
 
 object Boxes {
-
-  import archery.{Box => ArcheryBox, Geom}
 
   /**
    * Archery hard-codes [[Float]] to store points in [[Geom]]. It's safe to go to and from [[Int]] without losing precision. Besides this and [[Float]], there are no other options that can be safely implied. Callers must exercise caution and deliberate handling for other types (like [[Double]] or [[BigDecimal]]).
