@@ -15,12 +15,6 @@ trait NumberLike[S, T] {
 
 object NumberLike {
 
-  class IntFloatNumberLike(chop: Float => Int) extends NumberLike[Float, Int] {
-    override def from(v: Float): Int = chop(v)
-  }
-
-  object IntRoundFloatNumberLike extends IntFloatNumberLike(Math.round)
-
   class FloatIntNumberLike extends NumberLike[Int, Float] {
     override def from(v: Int): Float = v.toFloat
   }
