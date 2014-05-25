@@ -18,6 +18,12 @@ trait BoxLike[T] {
 
 object BoxLike {
 
+  implicit object NativeBoxLike extends BoxLike[Box] {
+    override def from(v: Box): Box = v
+
+    override def to(v: Box): Box = v
+  }
+
   /**
    * Archery uses [[Float]] to store points in [[Geom]], while [[Rectangle]] uses [[Int]]. Although Archery's not expected to produce output requiring higher numeric precision, this conversion will rely on [[Rectangle]] double-precision methods to perform conversion, thereby ensuring predictable behavior (principle of least surprise).
    */
