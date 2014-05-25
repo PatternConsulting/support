@@ -4,7 +4,8 @@ import java.awt.Rectangle
 
 import org.specs2.mutable._
 
-import Boxes._
+import Implicits.BoxesOps
+import archery.Box
 
 class BoxesSpec extends Specification {
 
@@ -12,12 +13,12 @@ class BoxesSpec extends Specification {
   val r1 = new Rectangle(20, 20, 200, 200)
   val s0 = Seq(r0, r1)
 
-  Boxes.intersections(s0)
+  s0.intersections
 
-  val b0 = Box(10, 10, 20, 20)
-  val b1 = Box(20, 20, 30, 30)
+  val b0 = Box(10, 10, 110, 110)
+  val b1 = Box(20, 20, 220, 220)
   val s1 = Seq(b0, b1)
 
-  Boxes.intersections(s1)
+  s1.intersections
 
 }
