@@ -7,36 +7,94 @@ import org.specs2.mutable._
 class BoxesSpec extends Specification {
 
   "Intersections" should {
-    //    "not exist for disjoint boxes" in {
-    //      val boxes: Seq[Box] = for (i <- 0 to 9) yield {
-    //        val x0 = i * 10
-    //        val y0 = i * 10
-    //        val x1 = x0 + 5
-    //        val y1 = y0 + 5
-    //        Box(x0, y0, x1, y1)
-    //      }
-    //
-    //      boxes.intersections must beEmpty
-    //    }
+    "not exist for disjoint boxes" in {
+      val count = 10
 
-    "exist for boxes sharing points (even for boxes with no area)" in {
-      val boxes: Seq[Box] = for (i <- 0 to 3) yield {
-        val x0 = i * 10
-        val y0 = 0
-        val x1 = x0 + 10
-        val y1 = y0 + 10
-        Box(x0, y0, x1, y1)
-      }
+      val input: Seq[Box] =
+        for (i <- 0 to count - 1) yield {
+          val x0 = i * 10
+          val y0 = i * 10
+          val x1 = x0 + 5
+          val y1 = y0 + 5
+          Box(x0, y0, x1, y1)
+        }
 
-      val expected: Seq[Box] = for (i <- 1 to 3) yield {
-        val x0 = i * 10
-        val y0 = 0
-        val x1 = x0
-        val y1 = y0 + 10
-        Box(x0, y0, x1, y1)
-      }
+      input.intersections must beEmpty
+    }
 
-      val actual = boxes.intersections
+    "exist for identical boxes occupying the same location" in {
+      val count = 10
+
+      val input: Seq[Box] =
+        for (i <- 0 to count - 1) yield {
+          val x0 = 0
+          val y0 = 0
+          val x1 = x0 + 10
+          val y1 = y0 + 10
+          Box(x0, y0, x1, y1)
+        }
+
+      val expected = Box(0, 0, 10, 10) :: Nil
+
+      val actual = input.intersections
+
+      actual.size must beEqualTo(expected.size)
+      actual must containAllOf(expected)
+    }
+
+    "exist for boxes sharing adjacent points in a grid" in {
+      val rows = 3
+      val columns = 3
+
+      val input: Seq[Box] =
+        (for (r <- 0 to rows - 1) yield {
+          for (c <- 0 to columns - 1) yield {
+            val x0 = c * 10
+            val y0 = r * 10
+            val x1 = x0 + 10
+            val y1 = y0 + 10
+            Box(x0, y0, x1, y1)
+          }
+        }).flatten
+
+      /* Vertical intersections. */
+      val expected0: Seq[Box] =
+        (for (r <- 0 to rows - 1) yield {
+          for (c <- 1 to columns - 1) yield {
+            val x0 = c * 10
+            val y0 = r * 10
+            val x1 = x0
+            val y1 = y0 + 10
+            Box(x0, y0, x1, y1)
+          }
+        }).flatten
+
+      /* Horizontal intersections. */
+      val expected1: Seq[Box] =
+        (for (c <- 0 to columns - 1) yield {
+          for (r <- 1 to rows - 1) yield {
+            val x0 = c * 10
+            val y0 = r * 10
+            val x1 = x0 + 10
+            val y1 = y0
+            Box(x0, y0, x1, y1)
+          }
+        }).flatten
+
+      /* Point intersections. */
+      val expected2: Set[Box] =
+        (expected0 ++ expected1)
+          .map(b => Box(b.x, b.y, b.x, b.y) :: Box(b.x2, b.y2, b.x2, b.y2) :: Nil)
+          .flatten
+          .toSet
+
+      val expected = expected0 ++ expected1 ++ expected2
+
+      expected0.size must beEqualTo(rows * (columns - 1))
+      expected1.size must beEqualTo((rows - 1) * columns)
+      expected2.size must beEqualTo(expected0.size + expected1.size)
+
+      val actual = input.intersections
 
       actual.size must beEqualTo(expected.size)
       actual must containAllOf(expected)
