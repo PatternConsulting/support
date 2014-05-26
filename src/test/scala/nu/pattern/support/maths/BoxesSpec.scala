@@ -75,6 +75,62 @@ class BoxesSpec extends Specification {
       val actual = input.intersections
       actual must containAllOf(expected)
     }
+
+    "exist for 4 stair-cased boxes sharing 3 points" in {
+      val input =
+        Box(10, 10, 20, 20) ::
+          Box(20, 20, 30, 30) ::
+          Box(30, 30, 40, 40) ::
+          Box(40, 40, 50, 50) ::
+          Nil
+
+      val expected =
+        Box(20, 20, 20, 20) ::
+          Box(30, 30, 30, 30) ::
+          Box(40, 40, 40, 40) ::
+          Nil
+
+      val actual = input.intersections
+      actual must containAllOf(expected)
+    }
+
+    "exist for 4 stair-cased boxes with 3 overlaps and 0 shared points" in {
+      val input =
+        Box(10, 10, 25, 25) ::
+          Box(20, 20, 35, 35) ::
+          Box(30, 30, 45, 45) ::
+          Box(40, 40, 55, 55) ::
+          Nil
+
+      val expected =
+        Box(20, 20, 25, 25) ::
+          Box(30, 30, 35, 35) ::
+          Box(40, 40, 45, 45) ::
+          Nil
+
+      val actual = input.intersections
+      actual must containAllOf(expected)
+    }
+
+    "exist for 4 stair-cased boxes with 3 overlaps and 2 shared points" in {
+      val input =
+        Box(10, 10, 30, 30) ::
+          Box(20, 20, 40, 40) ::
+          Box(30, 30, 50, 50) ::
+          Box(40, 40, 60, 60) ::
+          Nil
+
+      val expected =
+        Box(20, 20, 30, 30) ::
+          Box(30, 30, 30, 30) ::
+          Box(30, 30, 40, 40) ::
+          Box(40, 40, 40, 40) ::
+          Box(40, 40, 50, 50) ::
+          Nil
+
+      val actual = input.intersections
+      actual must containAllOf(expected)
+    }
   }
 
   case class Fixtures(input: Seq[Box], expected: Seq[Box])
