@@ -24,7 +24,7 @@ resolvers += "Typesafe (releases)" at "http://repo.typesafe.com/typesafe/release
 
 libraryDependencies ++= Seq(
   "com.meetup" %% "archery" % "0.3.0"
-  , "com.typesafe.play" %% "play-json" % "2.2.3"
+  , "com.typesafe.play" % "play-json_2.10" % "2.2.3"
   , "com.typesafe.scala-logging" %% "scala-logging-slf4j" % "2.1.2"
   , "org.specs2" %% "specs2" % "2.3.12" % "test"
 )
