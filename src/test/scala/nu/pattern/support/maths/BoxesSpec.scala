@@ -42,16 +42,38 @@ class BoxesSpec extends Specification {
       actual must containAllOf(expected)
     }
 
-    "exist for boxes sharing adjacent points in a 1 x 1 grid" in {
+    "exist for 1 x 1 grid of adjacent boxes" in {
       val fixtures = Fixtures.grid(1, 1)
       val actual = fixtures.input.intersections
       actual must containAllOf(fixtures.expected)
     }
 
-    "exist for boxes sharing adjacent points in a 4 x 4 grid" in {
+    "exist for 4 x 4 grid of adjacent boxes" in {
       val fixtures = Fixtures.grid(4, 4)
       val actual = fixtures.input.intersections
       actual must containAllOf(fixtures.expected)
+    }
+
+    "exist for 3 disjoint 2 x 2 grids of adjacent boxes" in {
+      val boxWidth = 10
+      val boxHeight = 10
+
+      val gridWidth = 2
+      val gridHeight = 2
+
+      val fixtures: Seq[Fixtures] =
+        for (i <- 0 to 3) yield {
+          val horizontalOffset = (boxWidth * gridWidth) * i + 5
+
+          Fixtures
+            .grid(gridWidth, gridHeight, boxWidth, boxHeight, horizontalOffset = horizontalOffset)
+        }
+
+      val input: Seq[Box] = fixtures.map(_.input).flatten
+      val expected: Seq[Box] = fixtures.map(_.expected).flatten
+
+      val actual = input.intersections
+      actual must containAllOf(expected)
     }
   }
 
@@ -59,7 +81,7 @@ class BoxesSpec extends Specification {
 
   object Fixtures {
 
-    def grid(columns: Int, rows: Int, width: Int = 10, height: Int = 10): Fixtures = {
+    def grid(columns: Int, rows: Int, width: Int = 10, height: Int = 10, horizontalOffset: Int = 0, verticalOffset: Int = 0): Fixtures = {
       val input: Seq[Box] =
         (for (r <- 0 to rows - 1) yield {
           for (c <- 0 to columns - 1) yield {
@@ -67,7 +89,8 @@ class BoxesSpec extends Specification {
             val y0 = r * height
             val x1 = x0 + width
             val y1 = y0 + height
-            Box(x0, y0, x1, y1)
+
+            Box(x0 + horizontalOffset, y0 + verticalOffset, x1 + horizontalOffset, y1 + verticalOffset)
           }
         }).flatten
 
@@ -79,7 +102,8 @@ class BoxesSpec extends Specification {
             val y0 = r * height
             val x1 = x0
             val y1 = y0 + height
-            Box(x0, y0, x1, y1)
+
+            Box(x0 + horizontalOffset, y0 + verticalOffset, x1 + horizontalOffset, y1 + verticalOffset)
           }
         }).flatten
 
@@ -91,7 +115,8 @@ class BoxesSpec extends Specification {
             val y0 = r * height
             val x1 = x0 + width
             val y1 = y0
-            Box(x0, y0, x1, y1)
+
+            Box(x0 + horizontalOffset, y0 + verticalOffset, x1 + horizontalOffset, y1 + verticalOffset)
           }
         }).flatten
 
@@ -103,7 +128,8 @@ class BoxesSpec extends Specification {
             val y0 = r * height
             val x1 = x0
             val y1 = y0
-            Box(x0, y0, x1, y1)
+
+            Box(x0 + horizontalOffset, y0 + verticalOffset, x1 + horizontalOffset, y1 + verticalOffset)
           }
         }).flatten
 
