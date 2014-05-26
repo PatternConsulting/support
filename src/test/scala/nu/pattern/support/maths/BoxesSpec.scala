@@ -42,50 +42,14 @@ class BoxesSpec extends Specification {
       actual must containAllOf(expected)
     }
 
-    "exist for boxes sharing adjacent points in a 2 x 2 grid" in {
-      val fixtures = Fixtures.grid(3, 3)
+    "exist for boxes sharing adjacent points in a 1 x 1 grid" in {
+      val fixtures = Fixtures.grid(1, 1)
       val actual = fixtures.input.intersections
       actual must containAllOf(fixtures.expected)
     }
 
-    "exist for boxes sharing adjacent points in a 3 x 3 grid" in {
-      val fixtures = Fixtures.grid(3, 3)
-      val actual = fixtures.input.intersections
-      actual must containAllOf(fixtures.expected)
-    }
-
-    "exist for boxes sharing adjacent points in a 2 x 1 grid" in {
-      val fixtures = Fixtures.grid(2, 1)
-      val actual = fixtures.input.intersections
-      actual must containAllOf(fixtures.expected)
-    }
-
-    "exist for boxes sharing adjacent points in a 1 x 2 grid" in {
-      val fixtures = Fixtures.grid(1, 2)
-      val actual = fixtures.input.intersections
-      actual must containAllOf(fixtures.expected)
-    }
-
-    "exist for boxes sharing adjacent points in a 3 x 1 grid" in {
-      val fixtures = Fixtures.grid(3, 1)
-      val actual = fixtures.input.intersections
-      actual must containAllOf(fixtures.expected)
-    }
-
-    "exist for boxes sharing adjacent points in a 1 x 3 grid" in {
-      val fixtures = Fixtures.grid(1, 3)
-      val actual = fixtures.input.intersections
-      actual must containAllOf(fixtures.expected)
-    }
-
-    "exist for boxes sharing adjacent points in a 3 x 6 grid" in {
-      val fixtures = Fixtures.grid(3, 6)
-      val actual = fixtures.input.intersections
-      actual must containAllOf(fixtures.expected)
-    }
-
-    "exist for boxes sharing adjacent points in a 6 x 3 grid" in {
-      val fixtures = Fixtures.grid(6, 3)
+    "exist for boxes sharing adjacent points in a 4 x 4 grid" in {
+      val fixtures = Fixtures.grid(4, 4)
       val actual = fixtures.input.intersections
       actual must containAllOf(fixtures.expected)
     }
