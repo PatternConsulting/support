@@ -19,8 +19,11 @@ object Boxes {
         .zipWithIndex
         .map { case (v, i) => Entry(v, i)}
 
+    /**
+     * Use each box as a search area, collecting any points—which may be from other boxes. If the resulting search turns up exactly one result, that box was the search parameter and no overlap exists (filter it out). For multiple matches, find the smallest possible overlap area using points composing the matched boxes.
+     */
     val intersectionBoxes =
-      _boxes.map(RTree(entries: _*).searchIntersection).toSet.filter(_.nonEmpty).map {
+      _boxes.map(RTree(entries: _*).searchIntersection).toSet.filter(1 < _.size).map {
         entries =>
           entries.map(_.geom.toBox).reduce { (b0, b1) =>
             /* Find the right- and down-most top-left point. */
