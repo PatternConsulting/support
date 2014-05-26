@@ -82,21 +82,25 @@ class BoxesSpec extends Specification {
         }).flatten
 
       /* Point intersections. */
-      val expected2: Set[Box] =
-        (expected0 ++ expected1)
-          .map(b => Box(b.x, b.y, b.x, b.y) :: Box(b.x2, b.y2, b.x2, b.y2) :: Nil)
-          .flatten
-          .toSet
+      val expected2: Seq[Box] =
+        (for (c <- 1 to columns - 1) yield {
+          for (r <- 1 to rows - 1) yield {
+            val x0 = c * 10
+            val y0 = r * 10
+            val x1 = x0
+            val y1 = y0
+            Box(x0, y0, x1, y1)
+          }
+        }).flatten
 
       val expected = expected0 ++ expected1 ++ expected2
 
-      expected0.size must beEqualTo(rows * (columns - 1))
-      expected1.size must beEqualTo((rows - 1) * columns)
-      expected2.size must beEqualTo(expected0.size + expected1.size)
+      assert(rows * (columns - 1) == expected0.size, "Calculation producing vertical intersections was wrong.")
+      assert((rows - 1) * columns == expected1.size, "Calculation producing horizontal intersections was wrong.")
+      assert((rows - 1) * (columns - 1) == expected2.size, "Calculation producing point intersections was wrong.")
 
       val actual = input.intersections
 
-      actual.size must beEqualTo(expected.size)
       actual must containAllOf(expected)
     }
   }
