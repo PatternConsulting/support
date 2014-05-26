@@ -19,26 +19,32 @@ object Boxes {
         .zipWithIndex
         .map { case (v, i) => Entry(v, i)}
 
-    /**
-     * Use each box as a search area, collecting any points—which may be from other boxes. If the resulting search turns up exactly one result, that box was the search parameter and no overlap exists (filter it out). For multiple matches, find the smallest possible overlap area using points composing the matched boxes.
-     */
-    val intersectionBoxes =
-      _boxes.map(RTree(entries: _*).searchIntersection).toSet.filter(1 < _.size).map {
-        entries =>
-          entries.map(_.geom.toBox).reduce { (b0, b1) =>
-            /* Find the right- and down-most top-left point. */
-            val x0 = Math.max(b0.x, b1.x)
-            val y0 = Math.max(b0.y, b1.y)
+    val space = RTree(entries: _*)
 
-            /* Find the left- and up-most bottom-right point. */
-            val x1 = Math.min(b0.x2, b1.x2)
-            val y1 = Math.min(b0.y2, b1.y2)
+    def mkIntersection(b0: Box, b1: Box) = {
+      /* Find the right- and down-most top-left point. */
+      val x0 = Math.max(b0.x, b1.x)
+      val y0 = Math.max(b0.y, b1.y)
 
-            Box(x0, y0, x1, y1)
-          }
-      }
+      /* Find the left- and up-most bottom-right point. */
+      val x1 = Math.min(b0.x2, b1.x2)
+      val y1 = Math.min(b0.y2, b1.y2)
 
-    intersectionBoxes.map(ev.to)
+      Box(x0, y0, x1, y1)
+    }
+
+    val intersectionBoxes0 = _boxes.map {
+      searchBox =>
+        /* Find all boxes intersecting the current search box, but exclude results which contain only the search box (that implicit suggests no overlap). */
+        val matchingBoxes =
+          Some(space.searchIntersection(searchBox).map(_.geom.toBox))
+            .filter(1 < _.size).getOrElse(Nil)
+
+        /* Create the intersection between each matching box and the search box. Note this causes redundant results, but those will be eliminated when converting to a set and this is an optimization that can be made later. */
+        matchingBoxes.map(mkIntersection(searchBox, _))
+    }.flatten
+
+    intersectionBoxes0.toSet.map(ev.to)
   }
 
 }
