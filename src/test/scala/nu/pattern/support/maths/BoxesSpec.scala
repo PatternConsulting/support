@@ -42,6 +42,22 @@ class BoxesSpec extends Specification {
       actual must containAllOf(expected)
     }
 
+    "exist for spurious boxes occupying a fuzzy location" in {
+
+      val input =
+        for (i <- 0 to 5) yield {
+          Box(100 - i, 100 - i, 200 + i, 200 + i)
+        }
+
+      val expected = input.head :: Nil
+
+      val actual = input.intersections
+
+      actual.size must beEqualTo(expected.size)
+      actual must containAllOf(expected)
+
+    }
+
     "exist for 1 x 1 grid of adjacent boxes" in {
       val fixtures = Fixtures.grid(1, 1)
       val actual = fixtures.input.intersections
@@ -131,6 +147,7 @@ class BoxesSpec extends Specification {
       val actual = input.intersections
       actual must containAllOf(expected)
     }
+
   }
 
   case class Fixtures(input: Seq[Box], expected: Seq[Box])
