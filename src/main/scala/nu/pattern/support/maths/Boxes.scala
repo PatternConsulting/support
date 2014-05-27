@@ -24,7 +24,7 @@ object Boxes {
       entry =>
         val b0 = entry.geom.toBox
 
-        /* Find all boxes that intersect the entry, but exclude the entry itself (as it'll participate in the intersection calcuation for each match). If there are no matches besides, then zero intersections will be produced. */
+        /* Find all boxes that intersect the entry, but exclude the entry itself (as it'll participate in the intersection calculation for each match). If there are no matches besides, then zero intersections will be produced. */
         val matchingBoxes =
           space
             .searchIntersection(entry.geom.toBox)
