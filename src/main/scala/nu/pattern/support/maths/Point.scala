@@ -42,8 +42,8 @@ object Point {
 
     val params = new ListParameterization
 
-    params.addParameter(DBSCAN.Parameterizer.MINPTS_ID, 1)
-    params.addParameter(DBSCAN.Parameterizer.EPSILON_ID, 3)
+    params.addParameter(DBSCAN.Parameterizer.EPSILON_ID, epsilon)
+    params.addParameter(DBSCAN.Parameterizer.MINPTS_ID, size)
     val clustering: DBSCAN[DoubleDistance, _] = ClassGenericsUtil.parameterizeOrAbort(classOf[DBSCAN[_, _]], params)
 
     val results = ResultUtil.getClusteringResults(clustering.run(db))
