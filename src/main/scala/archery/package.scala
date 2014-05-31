@@ -1,3 +1,4 @@
+import scala.annotation.tailrec
 import scala.collection.mutable
 
 package object archery {
@@ -28,6 +29,29 @@ package object archery {
         }
         arr
       }
+
+    def traverse(point: Point, d: Double): IndexedSeq[Entry[A]] = {
+      val size = tree.size
+
+      @tailrec def withAccumulator(queue: List[Entry[A]], previouslyVisited: IndexedSeq[Entry[A]] = IndexedSeq.empty): IndexedSeq[Entry[A]] =
+        queue match {
+          case e :: tail =>
+            val p = Point(e.geom.x, e.geom.y)
+
+            val nearest = tree.localK(p, d, size)
+
+            val unvisited = nearest.diff(previouslyVisited)
+            val visited = unvisited ++ previouslyVisited
+
+            withAccumulator(unvisited.toList ::: tail, visited)
+          case Nil =>
+            previouslyVisited
+        }
+
+      tree.nearest(point).foldLeft(IndexedSeq.empty[Entry[A]]) { (a, entry) =>
+        withAccumulator(entry :: Nil)
+      }
+    }
 
   }
 
