@@ -48,7 +48,7 @@ package object archery {
             previouslyVisited
         }
 
-      tree.nearest(point).foldLeft(IndexedSeq.empty[Entry[A]]) { (a, entry) =>
+      tree.localK(point, d, size).foldLeft(IndexedSeq.empty[Entry[A]]) { (a, entry) =>
         withAccumulator(entry :: Nil)
       }
     }
