@@ -64,13 +64,39 @@ class RTreeOpsSpec extends Specification {
   }
 
   "Traversal across uniform points" should {
-    val points = grid(2, 2, 1, 1)
+    val width = 10
+    val height = 10
+    val points = grid(width, height)
     val entries = points.map(p => Entry(p, p))
     val space = RTree(entries: _*)
 
-    "return all points when distance is enough for spacing" in {
+    "from a known point, return all points when distance is enough for spacing" in {
       val expected = points
       val actual = space.traverse(points(0), 1.1).map(_.value)
+
+      actual.size must beEqualTo(expected.size)
+      actual must containTheSameElementsAs(expected)
+    }
+
+    "from a foreign point within the cluster, return all points when distance is enough for spacing" in {
+      val expected = points
+      val actual = space.traverse(Point(0.5F, 0.5F), 1.1).map(_.value)
+
+      actual.size must beEqualTo(expected.size)
+      actual must containTheSameElementsAs(expected)
+    }
+
+    "from a foreign point outside but within threshold, return all points when distance is enough for spacing" in {
+      val expected = points
+      val actual = space.traverse(Point(-0.5F, -0.5F), 1.1).map(_.value)
+
+      actual.size must beEqualTo(expected.size)
+      actual must containTheSameElementsAs(expected)
+    }
+
+    "from a foreign point outside and without threshold, return no points" in {
+      val expected = Nil
+      val actual = space.traverse(Point(width + 10, height + 10), 1.1).map(_.value)
 
       actual.size must beEqualTo(expected.size)
       actual must containTheSameElementsAs(expected)
