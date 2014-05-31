@@ -9,8 +9,10 @@ package object archery {
 
     /**
      * A variant on the k-nearest neighbor function (see [[RTree.nearestK]]) that parameterizes the distance variable.
+     *
+     * @param d Distance value bounding the locality of a neighboring point.
      */
-    def nearestK(pt: Point, d: Double, k: Int): IndexedSeq[Entry[A]] =
+    def localK(pt: Point, d: Double, k: Int): IndexedSeq[Entry[A]] =
       if (k < 1) {
         Vector.empty
       } else {
