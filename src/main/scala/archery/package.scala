@@ -36,7 +36,10 @@ package object archery {
       @tailrec def withAccumulator(queue: List[Entry[A]], previouslyVisited: IndexedSeq[Entry[A]] = IndexedSeq.empty): IndexedSeq[Entry[A]] =
         queue match {
           case e :: tail =>
-            val p = Point(e.geom.x, e.geom.y)
+            val p = e.geom match {
+              case p: Point => p
+              case g => Point(g.x, g.y)
+            }
 
             val nearest = tree.localK(p, d, size)
 
