@@ -36,6 +36,7 @@ package object archery {
       @tailrec def withAccumulator(queue: List[Entry[A]], previouslyVisited: IndexedSeq[Entry[A]] = IndexedSeq.empty): IndexedSeq[Entry[A]] =
         queue match {
           case e :: tail =>
+            /* If the entry's geometry is a Point, use it instead of creating a new object. */
             val p = e.geom match {
               case p: Point => p
               case g => Point(g.x, g.y)
@@ -51,8 +52,8 @@ package object archery {
             previouslyVisited
         }
 
-      tree.localK(point, d, size).foldLeft(IndexedSeq.empty[Entry[A]]) { (a, entry) =>
-        withAccumulator(entry :: Nil)
+      tree.localK(point, d, size).foldLeft(IndexedSeq.empty[Entry[A]]) { (a, e) =>
+        withAccumulator(e :: Nil)
       }
     }
 
