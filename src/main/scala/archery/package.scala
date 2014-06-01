@@ -22,7 +22,7 @@ package object archery {
       def withinRadius(center: Point, radius: Float)(e: Entry[A]): Boolean =
         e.geom.distance(center) < radius
 
-      @tailrec def withAccumulator(queue: List[Entry[A]], previouslyVisited: Seq[Entry[A]] = IndexedSeq.empty): Seq[Entry[A]] =
+      @tailrec def withAccumulator(queue: List[Entry[A]], previouslyVisited: Seq[Entry[A]] = Seq.empty): Seq[Entry[A]] =
         queue match {
           case e :: tail =>
             /* If the entry's geometry is a Point, use it instead of creating a new object. */
@@ -44,6 +44,28 @@ package object archery {
       tree.search(point.toBox.grow(distance), withinRadius(point, distance)).foldLeft(Seq.empty[Entry[A]]) { (a, e) =>
         withAccumulator(e :: Nil)
       }
+    }
+
+    def clusters(distance: Float, entries: Seq[Entry[A]] = tree.entries.toSeq): Seq[Seq[Entry[A]]] = {
+
+      /* Folding isn't sufficient here. An explicit stack is needed to track which points have yet to be searched, as well as those which have already been visited (and clustered). */
+      @tailrec def withAccumulator(queue: List[Entry[A]], cs: Seq[Seq[Entry[A]]] = Seq.empty): Seq[Seq[Entry[A]]] =
+        queue match {
+          case e :: tail =>
+            /* If the entry's geometry is a Point, use it instead of creating a new object. */
+            val p = e.geom match {
+              case p: Point => p
+              case g => Point(g.x, g.y)
+            }
+
+            val c = tree.traverse(p, distance)
+
+            withAccumulator(tail.diff(c), cs :+ c)
+          case Nil =>
+            cs
+        }
+
+      withAccumulator(entries.toList)
     }
 
   }

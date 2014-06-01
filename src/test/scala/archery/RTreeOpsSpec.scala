@@ -112,4 +112,44 @@ class RTreeOpsSpec extends Specification {
       actual must beEmpty
     }
   }
+
+  "Density-reachable uniform points" should {
+    val width = 2
+    val height = 2
+
+    val cluster = grid[Float](width, height).map((Point.apply _).tupled)
+    val clusters = Seq
+      .fill(3)(cluster)
+      .zipWithIndex
+      .map { case (c, i) => c.map(p => Point(p.x + i * 2, p.y + i * 2))}
+
+    val points: Seq[Point] = clusters.flatten
+    val entries = points.map(p => Entry(p, p))
+    val space = RTree(entries: _*)
+
+    "form clusters" in {
+      val expected: Set[Set[Point]] = clusters.map(_.toSet).toSet
+      val actual: Set[Set[Point]] = space.clusters(1.1F).map(_.map(_.value).toSet).toSet
+
+      actual.size must beEqualTo(expected.size)
+      actual must beEqualTo(expected)
+    }
+  }
+
+  "Density-reachable non-uniform points" should {
+    val cluster1 = Resources.read[Point]("/variable-density-cluster-1.csv").toSeq
+    val cluster3 = Resources.read[Point]("/variable-density-cluster-3.csv").toSeq
+
+    val points = cluster1 ++ cluster3
+    val entries = points.map(p => Entry(p, p))
+    val space = RTree(entries: _*)
+
+    "form clusters" in {
+      val expected: Set[Set[Point]] = (cluster1 :: cluster3 :: Nil).map(_.toSet).toSet
+      val actual: Set[Set[Point]] = space.clusters(0.2F).map(_.map(_.value).toSet).toSet
+
+      actual.size must beEqualTo(expected.size)
+      actual must beEqualTo(expected)
+    }
+  }
 }
