@@ -3,37 +3,26 @@ import scala.collection.mutable
 
 package object archery {
 
+  implicit class BoxOps(b: Box) {
+    /**
+     * Expand the dimensions of this box by `d` in all directions.
+     */
+    def grow(d: Float) = Box(b.x - d, b.y - d, b.x2 + d, b.y2 + d)
+  }
+
   /**
    * Complimentary operations for [[RTree]].
    */
   implicit class RTreeOps[A](tree: RTree[A]) {
 
     /**
-     * A variant on the k-nearest neighbor function (see [[RTree.nearestK]]) that parameterizes the distance variable.
-     *
-     * @param d Distance value bounding the locality of a neighboring point.
+     * Starting from `point`, find all neighboring points within `distance`, then visit them and perform the same operation. Effectively a clustering algorithm that returns all points in a local cluster.
      */
-    def localK(pt: Point, d: Double, k: Int): IndexedSeq[Entry[A]] =
-      if (k < 1) {
-        Vector.empty
-      } else {
-        implicit val ord = Ordering.by[(Double, Entry[A]), Double](_._1)
-        val pq = mutable.PriorityQueue.empty[(Double, Entry[A])]
-        tree.root.nearestK(pt, k, d, pq)
-        val arr = new Array[Entry[A]](pq.size)
-        var i = arr.length - 1
-        while (i >= 0) {
-          val (_, e) = pq.dequeue()
-          arr(i) = e
-          i -= 1
-        }
-        arr
-      }
+    def traverse(point: Point, distance: Float): Seq[Entry[A]] = {
+      def withinRadius(center: Point, radius: Float)(e: Entry[A]): Boolean =
+        e.geom.distance(center) < radius
 
-    def traverse(point: Point, d: Double): IndexedSeq[Entry[A]] = {
-      val size = tree.size
-
-      @tailrec def withAccumulator(queue: List[Entry[A]], previouslyVisited: IndexedSeq[Entry[A]] = IndexedSeq.empty): IndexedSeq[Entry[A]] =
+      @tailrec def withAccumulator(queue: List[Entry[A]], previouslyVisited: Seq[Entry[A]] = IndexedSeq.empty): Seq[Entry[A]] =
         queue match {
           case e :: tail =>
             /* If the entry's geometry is a Point, use it instead of creating a new object. */
@@ -42,7 +31,7 @@ package object archery {
               case g => Point(g.x, g.y)
             }
 
-            val nearest = tree.localK(p, d, size)
+            val nearest = tree.search(p.toBox.grow(distance), withinRadius(p, distance))
 
             val unvisited = nearest.diff(previouslyVisited)
             val visited = unvisited ++ previouslyVisited
@@ -52,7 +41,7 @@ package object archery {
             previouslyVisited
         }
 
-      tree.localK(point, d, size).foldLeft(IndexedSeq.empty[Entry[A]]) { (a, e) =>
+      tree.search(point.toBox.grow(distance), withinRadius(point, distance)).foldLeft(Seq.empty[Entry[A]]) { (a, e) =>
         withAccumulator(e :: Nil)
       }
     }

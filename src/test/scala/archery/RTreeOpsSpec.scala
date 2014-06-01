@@ -1,8 +1,7 @@
 package archery
 
-import org.specs2.mutable._
 import nu.pattern.support.Resources
-import spire.implicits._
+import org.specs2.mutable._
 import spire.math._
 
 class RTreeOpsSpec extends Specification {
@@ -21,50 +20,6 @@ class RTreeOpsSpec extends Specification {
   def withinCircle[T](x: T, y: T, r: T)(p: Point)(implicit ev: Numeric[T]) =
     p.distance(Point(ev.toFloat(x), ev.toFloat(y))) < ev.toFloat(r)
 
-  "Local k-Neighbor searches of uniform points" should {
-    val points = grid[Float](100, 100).map((Point.apply _).tupled)
-    val entries = points.map(p => Entry(p, p))
-    val space = RTree(entries: _*)
-
-    "return only reachable points, with an unbounded K, from the center." in {
-      val expected = points.filter(withinCircle(50, 50, 10))
-      val actual = space.localK(Point(50, 50), 10, Int.MaxValue).map(_.value)
-
-      actual.size must beEqualTo(expected.size)
-      actual must containTheSameElementsAs(expected)
-    }
-
-    "return only reachable points, with an unbounded K, from a corner." in {
-      val expected = points.filter(withinCircle(0, 0, 10))
-      val actual = space.localK(Point(0, 0), 10, Int.MaxValue).map(_.value)
-
-      actual.size must beEqualTo(expected.size)
-      actual must containTheSameElementsAs(expected)
-    }
-  }
-
-  "Local k-Neighbor searches of non-uniform points" should {
-    val points = Resources.read[Point]("/variable-density-cluster-1.csv").toSeq
-    val entries = points.map(p => Entry(p, p))
-    val space = RTree(entries: _*)
-
-    "return only reachable points, with an unbounded K, from the center." in {
-      val expected = points.filter(withinCircle(0.2, 0.2, 0.1))
-      val actual = space.localK(Point(0.2F, 0.2F), 0.1, Int.MaxValue).map(_.value)
-
-      actual.size must beEqualTo(expected.size)
-      actual must containTheSameElementsAs(expected)
-    }
-
-    "return only reachable points, with an unbounded K, from a corner." in {
-      val expected = points.filter(withinCircle(0, 0, 0.2))
-      val actual = space.localK(Point(0, 0), 0.2, Int.MaxValue).map(_.value)
-
-      actual.size must beEqualTo(expected.size)
-      actual must containTheSameElementsAs(expected)
-    }
-  }
-
   "Traversal across uniform points" should {
     val width = 10
     val height = 10
@@ -74,7 +29,7 @@ class RTreeOpsSpec extends Specification {
 
     "return all points when distance is enough for spacing, from a known point" in {
       val expected = points
-      val actual = space.traverse(points(0), 1.1).map(_.value)
+      val actual = space.traverse(points(0), 1.1F).map(_.value)
 
       actual.size must beEqualTo(expected.size)
       actual must containTheSameElementsAs(expected)
@@ -82,7 +37,7 @@ class RTreeOpsSpec extends Specification {
 
     "return all points when distance is enough for spacing, from a foreign point within the cluster" in {
       val expected = points
-      val actual = space.traverse(Point(0.5F, 0.5F), 1.1).map(_.value)
+      val actual = space.traverse(Point(0.5F, 0.5F), 1.1F).map(_.value)
 
       actual.size must beEqualTo(expected.size)
       actual must containTheSameElementsAs(expected)
@@ -90,7 +45,7 @@ class RTreeOpsSpec extends Specification {
 
     "return all points when distance is enough for spacing, from a foreign point outside but within threshold" in {
       val expected = points
-      val actual = space.traverse(Point(-0.5F, -0.5F), 1.1).map(_.value)
+      val actual = space.traverse(Point(-0.5F, -0.5F), 1.1F).map(_.value)
 
       actual.size must beEqualTo(expected.size)
       actual must containTheSameElementsAs(expected)
@@ -98,7 +53,7 @@ class RTreeOpsSpec extends Specification {
 
     "from a foreign point outside and without threshold, return no points" in {
       val expected = Nil
-      val actual = space.traverse(Point(width + 10, height + 10), 1.1).map(_.value)
+      val actual = space.traverse(Point(width + 10, height + 10), 1.1F).map(_.value)
 
       actual.size must beEqualTo(expected.size)
       actual must containTheSameElementsAs(expected)
@@ -123,7 +78,7 @@ class RTreeOpsSpec extends Specification {
 
     "return only points reachable from a search point (from cluster 1)" in {
       val expected = cluster1
-      val actual = space.traverse(cluster1(0), 0.05).map(_.value)
+      val actual = space.traverse(cluster1(0), 0.05F).map(_.value)
 
       actual.size must beEqualTo(expected.size)
       actual must containTheSameElementsAs(expected)
@@ -131,7 +86,7 @@ class RTreeOpsSpec extends Specification {
 
     "return only points reachable from a search point (from cluster 2)" in {
       val expected = cluster3
-      val actual = space.traverse(cluster3(0), 0.2).map(_.value)
+      val actual = space.traverse(cluster3(0), 0.2F).map(_.value)
 
       actual.size must beEqualTo(expected.size)
       actual must containTheSameElementsAs(expected)
@@ -145,14 +100,14 @@ class RTreeOpsSpec extends Specification {
 
     "return only points reachable from a local search point" in {
       val expected = points
-      val actual = space.traverse(expected(0), 0.5).map(_.value)
+      val actual = space.traverse(expected(0), 0.5F).map(_.value)
 
       actual.size must beEqualTo(expected.size)
       actual must containTheSameElementsAs(expected)
     }
 
     "return no points from a remote point" in {
-      val actual = space.traverse(Point(2, 2), 0.5).map(_.value)
+      val actual = space.traverse(Point(2, 2), 0.5F).map(_.value)
 
       actual must beEmpty
     }
