@@ -2,6 +2,8 @@ package archery
 
 import org.specs2.mutable._
 import nu.pattern.support.Resources
+import spire.implicits._
+import spire.math._
 
 class RTreeOpsSpec extends Specification {
 
@@ -9,18 +11,22 @@ class RTreeOpsSpec extends Specification {
     override def apply(v: Seq[String]): Point = Point(v(0).toFloat, v(1).toFloat)
   }
 
-  private def grid(w: Int, h: Int, spaceX: Int = 1, spaceY: Int = 1): Seq[Point] =
+  private def grid[T](w: Int, h: Int)(implicit ev: Numeric[T]): Seq[(T, T)] =
     (for (y <- 0 to w - 1) yield {
       for (x <- 0 to h - 1) yield {
-        Point((spaceX * x).toFloat, (spaceY * y).toFloat)
+        (ev.fromType(x), ev.fromType(y))
       }
     }).flatten
+
+  private def shift[S: Numeric](x: S, y: S)(p: (S, S)) = (x + p._1, y + p._2)
+
+  private def stretch[S: Numeric](x: S, y: S)(p: (S, S)) = (x * p._1, y * p._2)
 
   def withinCircle[T](x: T, y: T, r: T)(p: Point)(implicit ev: Numeric[T]) =
     p.distance(Point(ev.toFloat(x), ev.toFloat(y))) < ev.toFloat(r)
 
   "Local k-Neighbor searches of uniform points" should {
-    val points = grid(100, 100)
+    val points = grid[Float](100, 100).map((Point.apply _).tupled)
     val entries = points.map(p => Entry(p, p))
     val space = RTree(entries: _*)
 
@@ -66,7 +72,7 @@ class RTreeOpsSpec extends Specification {
   "Traversal across uniform points" should {
     val width = 10
     val height = 10
-    val points = grid(width, height)
+    val points = grid[Float](width, height).map((Point.apply _).tupled)
     val entries = points.map(p => Entry(p, p))
     val space = RTree(entries: _*)
 
