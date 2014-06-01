@@ -18,10 +18,6 @@ class RTreeOpsSpec extends Specification {
       }
     }).flatten
 
-  private def shift[S: Numeric](x: S, y: S)(p: (S, S)) = (x + p._1, y + p._2)
-
-  private def stretch[S: Numeric](x: S, y: S)(p: (S, S)) = (x * p._1, y * p._2)
-
   def withinCircle[T](x: T, y: T, r: T)(p: Point)(implicit ev: Numeric[T]) =
     p.distance(Point(ev.toFloat(x), ev.toFloat(y))) < ev.toFloat(r)
 
@@ -111,10 +107,17 @@ class RTreeOpsSpec extends Specification {
 
   "Traversal across non-uniform points" in {
     val cluster1 = Resources.read[Point]("/variable-density-cluster-1.csv").toSeq
-    //val cluster2 = Resources.read[Point]("/variable-density-cluster-2.csv").toSeq
+    val cluster2 = Resources.read[Point]("/variable-density-cluster-2.csv").toSeq
     val cluster3 = Resources.read[Point]("/variable-density-cluster-3.csv").toSeq
 
-    val points = cluster1 ++ /*cluster2 ++*/ cluster3
+    /* Fill with a large number of spurious outliers. */
+    val outliers = Seq
+      .fill(1000)(cluster1 ++ cluster2 ++ cluster3)
+      .zipWithIndex
+      .map { case (c, i) => c.map(p => Point(p.x + i + 1, p.y + i + 1))}
+      .flatten
+
+    val points = cluster1 ++ cluster3 ++ outliers
     val entries = points.map(p => Entry(p, p))
     val space = RTree(entries: _*)
 
