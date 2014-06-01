@@ -72,7 +72,7 @@ class RTreeOpsSpec extends Specification {
     val entries = points.map(p => Entry(p, p))
     val space = RTree(entries: _*)
 
-    "from a known point, return all points when distance is enough for spacing" in {
+    "return all points when distance is enough for spacing, from a known point" in {
       val expected = points
       val actual = space.traverse(points(0), 1.1).map(_.value)
 
@@ -80,7 +80,7 @@ class RTreeOpsSpec extends Specification {
       actual must containTheSameElementsAs(expected)
     }
 
-    "from a foreign point within the cluster, return all points when distance is enough for spacing" in {
+    "return all points when distance is enough for spacing, from a foreign point within the cluster" in {
       val expected = points
       val actual = space.traverse(Point(0.5F, 0.5F), 1.1).map(_.value)
 
@@ -88,7 +88,7 @@ class RTreeOpsSpec extends Specification {
       actual must containTheSameElementsAs(expected)
     }
 
-    "from a foreign point outside but within threshold, return all points when distance is enough for spacing" in {
+    "return all points when distance is enough for spacing, from a foreign point outside but within threshold" in {
       val expected = points
       val actual = space.traverse(Point(-0.5F, -0.5F), 1.1).map(_.value)
 
@@ -105,7 +105,7 @@ class RTreeOpsSpec extends Specification {
     }
   }
 
-  "Traversal across non-uniform points" in {
+  "Traversal across non-uniform points" should {
     val cluster1 = Resources.read[Point]("/variable-density-cluster-1.csv").toSeq
     val cluster2 = Resources.read[Point]("/variable-density-cluster-2.csv").toSeq
     val cluster3 = Resources.read[Point]("/variable-density-cluster-3.csv").toSeq
@@ -135,6 +135,26 @@ class RTreeOpsSpec extends Specification {
 
       actual.size must beEqualTo(expected.size)
       actual must containTheSameElementsAs(expected)
+    }
+  }
+
+  "Traversal across overlapping points" should {
+    val points = Seq.fill(100)(1).map(c => Point(c, c))
+    val entries = points.map(p => Entry(p, p))
+    val space = RTree(entries: _*)
+
+    "return only points reachable from a local search point" in {
+      val expected = points
+      val actual = space.traverse(expected(0), 0.5).map(_.value)
+
+      actual.size must beEqualTo(expected.size)
+      actual must containTheSameElementsAs(expected)
+    }
+
+    "return no points from a remote point" in {
+      val actual = space.traverse(Point(2, 2), 0.5).map(_.value)
+
+      actual must beEmpty
     }
   }
 }
