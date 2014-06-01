@@ -20,8 +20,10 @@ buildInfoKeys := Seq[BuildInfoKey](
 
 buildInfoPackage := "nu.pattern.support"
 
+resolvers += "Typesafe (releases)" at "http://repo.typesafe.com/typesafe/releases/"
+
 /* See http://stackoverflow.com/a/20497429 for details. */
-resolvers += "Typesafe (releases)" at "http://repo.typesafe.com/typesafe/simple/maven-releases/"
+resolvers += "Typesafe (releases, Maven)" at "http://repo.typesafe.com/typesafe/simple/maven-releases/"
 
 libraryDependencies ++= Seq(
   "com.meetup" %% "archery" % "0.3.0"
