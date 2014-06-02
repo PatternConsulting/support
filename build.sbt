@@ -29,6 +29,7 @@ resolvers += "Typesafe (releases, Maven)" at "http://repo.typesafe.com/typesafe/
 
 libraryDependencies ++= Seq(
   "com.meetup" %% "archery" % "0.3.0"
+  , "com.typesafe.play" %% "anorm" % "2.3.0"
   , "com.typesafe.play" %% "play-json" % "2.3.0"
   , "com.typesafe.scala-logging" %% "scala-logging-slf4j" % "2.1.2"
   , "org.specs2" %% "specs2" % "2.3.12" % "test"
