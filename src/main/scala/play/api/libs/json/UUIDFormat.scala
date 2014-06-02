@@ -1,9 +1,7 @@
-package nu.pattern.support.formats
+package play.api.libs.json
 
-import play.api.libs.json._
 import java.util.UUID
-import play.api.libs.json.JsString
-import play.api.libs.json.JsSuccess
+
 import scala.util.{Failure, Success, Try}
 
 object UUIDFormat extends Format[UUID] {

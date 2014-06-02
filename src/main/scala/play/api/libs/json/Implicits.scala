@@ -1,6 +1,5 @@
-package nu.pattern.support.formats
+package play.api.libs.json
 
-import play.api.libs.json._
 import java.util.UUID
 
 object Implicits {

@@ -1,7 +1,6 @@
-package nu.pattern.support.graphics
+package java.awt.image
 
 import java.awt.AlphaComposite
-import java.awt.image.BufferedImage
 
 object BufferedImages {
   def convertTo(original: BufferedImage, `type`: Int) = {

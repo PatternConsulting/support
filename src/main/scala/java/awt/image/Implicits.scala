@@ -1,6 +1,4 @@
-package nu.pattern.support.graphics
-
-import java.awt.image.BufferedImage
+package java.awt.image
 
 object Implicits {
 
