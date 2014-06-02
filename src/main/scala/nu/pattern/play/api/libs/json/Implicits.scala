@@ -1,6 +1,8 @@
-package play.api.libs.json
+package nu.pattern.play.api.libs.json
 
 import java.util.UUID
+
+import play.api.libs.json.Format
 
 object Implicits {
   implicit val uuidF: Format[UUID] = UUIDFormat

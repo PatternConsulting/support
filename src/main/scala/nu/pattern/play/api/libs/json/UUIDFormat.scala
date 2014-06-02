@@ -1,8 +1,10 @@
-package play.api.libs.json
+package nu.pattern.play.api.libs.json
 
 import java.util.UUID
 
 import scala.util.{Failure, Success, Try}
+
+import play.api.libs.json._
 
 object UUIDFormat extends Format[UUID] {
   override def reads(v: JsValue): JsResult[UUID] = v match {

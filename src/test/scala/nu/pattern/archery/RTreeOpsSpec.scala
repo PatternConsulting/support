@@ -1,8 +1,9 @@
-package archery
+package nu.pattern.archery
 
 import nu.pattern.support.Resources
 import org.specs2.mutable._
 import spire.math._
+import archery.{RTree, Entry, Point}
 
 class RTreeOpsSpec extends Specification {
 

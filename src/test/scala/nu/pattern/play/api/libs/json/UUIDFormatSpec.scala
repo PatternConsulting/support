@@ -1,8 +1,9 @@
-package play.api.libs.json
+package nu.pattern.play.api.libs.json
 
 import java.util.UUID
 
 import org.specs2.mutable._
+import play.api.libs.json.{JsError, JsString, JsSuccess}
 
 class UUIDFormatSpec extends Specification {
   val valid = UUID.randomUUID()

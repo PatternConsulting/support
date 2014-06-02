@@ -1,4 +1,6 @@
-package java.awt.image
+package nu.pattern.java.awt.image
+
+import java.awt.image.BufferedImage
 
 object Implicits {
 
