@@ -1,4 +1,4 @@
-package nu.pattern.java.awt.image
+package nu.pattern.support.java.awt.image
 
 import java.awt.AlphaComposite
 import java.awt.image.BufferedImage

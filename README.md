@@ -6,4 +6,4 @@ Common utility classes used by Pattern, and possibly helpful to others. This lib
 
 ## Conventions
 
-Most of this project serves to augment the capabilities of third-party libraries. Rather than prefix everything within Pattern's namespace, `nu.pattern`, the package structure here is designed to reflect those projects to make obvious what's being augmented. While this runs the risk of polluting those namespaces, inclusion of this library implies an explicit desire for its capabilities. Care is taken to ensure collisions are avoided, and common conventions are kept separate.
+Most of this project serves to augment the capabilities of third-party libraries, which are prefixed in the `nu.pattern` namespace. The structure reflects those libraries to indicate the intentions of those supporting classes. While this is indeed verbose, preserves clarity and avoids pollution namespaces. 

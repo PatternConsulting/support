@@ -1,4 +1,4 @@
-package nu.pattern.archery
+package nu.pattern.support.archery
 
 import nu.pattern.support.Resources
 import org.specs2.mutable._

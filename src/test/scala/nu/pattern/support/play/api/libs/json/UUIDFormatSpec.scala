@@ -1,4 +1,4 @@
-package nu.pattern.play.api.libs.json
+package nu.pattern.support.play.api.libs.json
 
 import java.util.UUID
 
