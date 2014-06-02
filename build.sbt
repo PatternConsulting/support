@@ -32,6 +32,7 @@ libraryDependencies ++= Seq(
   , "com.typesafe.play" %% "anorm" % "2.3.0"
   , "com.typesafe.play" %% "play-json" % "2.3.0"
   , "com.typesafe.scala-logging" %% "scala-logging-slf4j" % "2.1.2"
+  , "org.eu.acolyte" %% "jdbc-scala" % "1.0.19" % "test"
   , "org.specs2" %% "specs2" % "2.3.12" % "test"
   , "org.spire-math" %% "spire" % "0.7.5"
 )
