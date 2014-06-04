@@ -6,10 +6,25 @@ import play.api.libs.json._
 import anorm.{NotAssigned, Pk}
 import anorm.Id
 import play.api.libs.json.JsSuccess
+import play.api.data.validation.ValidationError
+import scala.util.{Failure, Success, Try}
 
 object Implicits {
 
-  implicit val uuidF: Format[UUID] = UUIDFormat
+  implicit object UUIDWrites extends Writes[UUID] {
+    def writes(o: UUID) = JsString(o.toString)
+  }
+
+  implicit object UUIDReads extends Reads[UUID] {
+    def reads(js: JsValue) = js match {
+      case JsString(s) =>
+        Try(UUID.fromString(s.trim)) match {
+          case Success(u) => JsSuccess(u)
+          case Failure(e) => JsError( s"""Invalid UUID \"$s\". (${e.getMessage})""")
+        }
+      case _ => JsError(Seq(JsPath() -> Seq(ValidationError("error.expected.jsstring"))))
+    }
+  }
 
   implicit def PkWrites[T](implicit w: Writes[T]): Writes[Pk[T]] = new Writes[Pk[T]] {
     def writes(o: Pk[T]) = o match {
