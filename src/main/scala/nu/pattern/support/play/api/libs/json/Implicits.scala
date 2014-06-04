@@ -4,10 +4,13 @@ import java.util.UUID
 
 import play.api.libs.json._
 import anorm.{NotAssigned, Pk}
+import scala.util.Try
 import anorm.Id
 import play.api.libs.json.JsSuccess
+import scala.util.Success
+import scala.util.Failure
+import play.api.libs.json.JsString
 import play.api.data.validation.ValidationError
-import scala.util.{Failure, Success, Try}
 
 object Implicits {
 
@@ -26,6 +29,7 @@ object Implicits {
     }
   }
 
+  /** Almost identical in convention to [[Writes.OptionWrites]]. [[Pk]] is simply another value-holder type that speaks to specific needs. */
   implicit def PkWrites[T](implicit w: Writes[T]): Writes[Pk[T]] = new Writes[Pk[T]] {
     def writes(o: Pk[T]) = o match {
       case Id(value) => w.writes(value)
@@ -33,6 +37,7 @@ object Implicits {
     }
   }
 
+  /** Almost identical in convention to [[Reads.OptionReads]]. [[Pk]] is simply another value-holder type that speaks to specific needs. */
   implicit def PkReads[T](implicit r: Reads[T]): Reads[Pk[T]] = new Reads[Pk[T]] {
     def reads(js: JsValue): JsResult[Pk[T]] = r.reads(js).fold(e => JsSuccess(NotAssigned), v => JsSuccess(Id(v)))
   }
