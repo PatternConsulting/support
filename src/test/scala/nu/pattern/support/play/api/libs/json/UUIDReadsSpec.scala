@@ -8,7 +8,7 @@ import nu.pattern.support.play.api.libs.json.Implicits.UUIDReads
 
 class UUIDReadsSpec extends Specification {
 
-  s"""Reader""" should {
+  s"""Reads""" should {
     val valid = UUID.randomUUID()
 
     s"""return errors for junk values""" in {
