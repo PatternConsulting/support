@@ -20,6 +20,10 @@ buildInfoKeys := Seq[BuildInfoKey](
 
 buildInfoPackage := "nu.pattern.support"
 
+scalaVersion := "2.11.1"
+
+crossScalaVersions := Seq("2.10.4", "2.11.1")
+
 resolvers += "Typesafe (releases)" at "http://repo.typesafe.com/typesafe/releases/"
 
 /* See http://stackoverflow.com/a/20497429 for details. */
