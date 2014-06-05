@@ -42,4 +42,20 @@ object Implicits {
     def reads(js: JsValue): JsResult[Pk[T]] = r.reads(js).fold(e => JsSuccess(NotAssigned), v => JsSuccess(Id(v)))
   }
 
+  implicit def IdReads[T](implicit r: Reads[T]): Reads[Id[T]] = new Reads[Id[T]] {
+    override def reads(js: JsValue): JsResult[Id[T]] = r.reads(js).map(Id(_))
+  }
+
+  implicit object NotAssignedReads extends Reads[Pk[Nothing]] {
+    override def reads(js: JsValue): JsResult[Pk[Nothing]] = JsSuccess(NotAssigned)
+  }
+
+  implicit def IdWrites[T](implicit w: Writes[T]): Writes[Id[T]] = new Writes[Id[T]] {
+    override def writes(o: Id[T]): JsValue = w.writes(o.get)
+  }
+
+  implicit object NotAssignedWrites extends Writes[Pk[Nothing]] {
+    override def writes(o: Pk[Nothing]): JsValue = JsNull
+  }
+
 }
