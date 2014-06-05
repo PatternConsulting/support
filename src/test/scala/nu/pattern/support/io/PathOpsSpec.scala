@@ -13,17 +13,23 @@ class PathOpsSpec extends Specification {
     path
   }
 
-  "Paths" should {
-    "delete immediately when onShutdown is false" in {
-      val path = generateFiles
-      path.delete()
-      Files.exists(path) must beFalse
-    }
+  val path0 = generateFiles
 
-    "delete eventually when onShutdown is true" in {
-      val path = generateFiles
-      path.delete(onShutdown = true)
-      Files.exists(path) must beTrue
+  s"""Path "$path0"""" should {
+    "exist and delete eventually when onShutdown is true" in {
+      Files.exists(path1) must beTrue
+      path0.delete(onShutdown = true)
+      Files.exists(path0) must beTrue
+    }
+  }
+
+  val path1 = generateFiles
+
+  s"""Path "$path1"""" should {
+    "exist and delete immediately when onShutdown is false" in {
+      Files.exists(path1) must beTrue
+      path1.delete()
+      Files.exists(path1) must beFalse
     }
   }
 }
