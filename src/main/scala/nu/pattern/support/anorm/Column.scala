@@ -1,18 +1,13 @@
 package nu.pattern.support.anorm
 
-import anorm.{Id, Pk, MetaDataItem, TypeDoesNotMatch}
+import anorm._
 import anorm.Column._
-import scala.reflect.ClassTag
+import anorm.Id
 
 /**
  * [[anorm.Column]] companion, providing default conversions.
  */
 object Column {
-  implicit def columnToPk[T: ClassTag]: anorm.Column[Pk[T]] = nonNull { (value, meta) =>
-    val MetaDataItem(qualified, nullable, clazz) = meta
-    Id(value) match {
-      case v: Pk[T] => Right(v)
-      case _ => Left(TypeDoesNotMatch(s"Cannot convert $value: ${value.asInstanceOf[AnyRef].getClass} to Pk for column $qualified"))
-    }
-  }
+  implicit def columnToId[T](implicit c: Column[T]): Column[Id[T]] =
+    nonNull { (value, meta) => c(value, meta).map(Id(_)) }
 }
