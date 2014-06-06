@@ -11,10 +11,15 @@ import nu.pattern.support.anorm.Column._
 
 class ColumnSpec extends Specification {
 
-  "Column mapped as Pk" should {
+  "Integer column mapped as Pk" should {
     val expected = Id(10)
 
     "be parsed from integer" in withQueryResult(intList :+ expected.get) {
+      implicit con =>
+        SQL("SELECT c").as(scalar[Pk[Int]].single) aka "parsed Pk" must_== expected
+    }
+
+    "not be parsed from long" in withQueryResult(longList :+ 10L) {
       implicit con =>
         SQL("SELECT c").as(scalar[Pk[Int]].single) aka "parsed Pk" must_== expected
     }
