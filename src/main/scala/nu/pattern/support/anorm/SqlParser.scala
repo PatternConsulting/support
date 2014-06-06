@@ -17,8 +17,8 @@ object SqlParser {
    *   .as(uuid("a") ~ SqlParser.str("b") map (* SqlParser.flatten) single)
    * }}}
    */
-  def uuid(columnName: String)(implicit c: anorm.Column[UUID]): RowParser[UUID] =
-    get[UUID](columnName)(c)
+  def uuid(columnName: String): RowParser[UUID] =
+    get[UUID](columnName)(Column.columnToUUID)
 
   /**
    * Parses specified column as [[Id]].
