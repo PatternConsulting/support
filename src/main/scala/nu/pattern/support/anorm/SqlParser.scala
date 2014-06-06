@@ -1,6 +1,6 @@
 package nu.pattern.support.anorm
 
-import anorm.{Pk, RowParser}
+import anorm.{Pk, Id, RowParser}
 import anorm.SqlParser._
 import java.util.UUID
 
@@ -21,17 +21,17 @@ object SqlParser {
     get[UUID](columnName)(c)
 
   /**
-   * Parses specified column as [[Pk]].
+   * Parses specified column as [[Id]].
    *
    * {{{
-   * import anorm.Pk
+   * import anorm.Id
    * import nu.pattern.support.anorm.SqlParser._
    *
    * val t: (Pk[Int], String) = SQL("SELECT a, b FROM test")
    *   .as(pk[Int]("a") ~ SqlParser.str("b") map (* SqlParser.flatten) single)
    * }}}
    */
-  def pk[T](columnName: String)(implicit c: anorm.Column[Pk[T]]): RowParser[Pk[T]] =
-    get[Pk[T]](columnName)(c)
+  def pk[T](columnName: String)(implicit c: anorm.Column[Id[T]]): RowParser[Id[T]] =
+    get[Id[T]](columnName)(c)
 
 }
