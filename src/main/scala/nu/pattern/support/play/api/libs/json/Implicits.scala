@@ -58,4 +58,22 @@ object Implicits {
     override def writes(o: Pk[Nothing]): JsValue = JsNull
   }
 
+  implicit class JsObjectOps(value: JsObject) {
+    /**
+     * Performs a deep merge between the local `value` and an exemplar object. The source `value` may not be a valid `T`, but it's values will be applied over a [[JsObject]] representation of `other`, and the result _must_ be readable back to a `T`.
+     *
+     * @param other Original model used to construct
+     * @param r [[Reads]] that brings the merged [[JsObject]] back to a `T`.
+     * @param w [[Writes]] that converts `other` to [[JsObject]] for merging with `value`.
+     * @tparam T Ultimate concrete type.
+     *
+     * @return The local `value` deeply-merged onto `other`.
+     */
+    def deepMergeAs[T](other: T)(implicit r: Reads[T], w: Writes[T]): T = {
+      val o = w.writes(other).as[JsObject]
+      val m = o.deepMerge(value)
+      m.as[T]
+    }
+  }
+
 }
