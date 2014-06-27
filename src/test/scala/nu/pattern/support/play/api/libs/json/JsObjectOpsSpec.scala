@@ -7,7 +7,7 @@ import Implicits.JsObjectOps
 
 class JsObjectOpsSpec extends Specification {
 
-  case class Address(street: String, city: String)
+  case class Address(street: String, city: String, country: Option[String])
 
   implicit val addressR = reads[Address]
 
@@ -26,7 +26,8 @@ class JsObjectOpsSpec extends Specification {
       31,
       Address(
         "1234 East Street",
-        "Townsville"
+        "Townsville",
+        Some("United States")
       )
     )
 
@@ -39,19 +40,29 @@ class JsObjectOpsSpec extends Specification {
       obj("foo" -> "bear").deepMergeAs(sample) must beEqualTo(sample)
     }
 
-    "overwrite top-level values" in {
+    "set surface values" in {
       val expected = sample.copy(name = "John Smith")
       obj("name" -> "John Smith").deepMergeAs(sample) must beEqualTo(expected)
     }
 
-    "set optional top-level values" in {
+    "set optional surface values" in {
       val expected = sample.copy(nickname = Some("Jannet"))
       obj("nickname" -> "Jannet").deepMergeAs(sample) must beEqualTo(expected)
     }
 
-    "unset optional top-level values" in {
+    "unset optional surface values" in {
       val expected = sample.copy(nickname = None)
       obj("nickname" -> JsNull).deepMergeAs(sample) must beEqualTo(expected)
+    }
+
+    "set nested values" in {
+      val expected = sample.copy(home = sample.home.copy(street = "5678 West Street"))
+      obj("home" -> obj("street" -> "5678 West Street")).deepMergeAs(sample) must beEqualTo(expected)
+    }
+
+    "unset optional nested values" in {
+      val expected = sample.copy(home = sample.home.copy(country = None))
+      obj("home" -> obj("country" -> JsNull)).deepMergeAs(sample) must beEqualTo(expected)
     }
   }
 }
