@@ -2,7 +2,7 @@ package nu.pattern.support
 
 import _root_.java.io.IOException
 import _root_.java.nio.file.attribute.BasicFileAttributes
-import _root_.java.nio.file.{FileVisitResult, SimpleFileVisitor, Files, Path}
+import _root_.java.nio.file.{FileVisitResult, Files, Path, SimpleFileVisitor}
 
 package object io {
 

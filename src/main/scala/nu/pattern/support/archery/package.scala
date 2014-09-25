@@ -1,6 +1,7 @@
 package nu.pattern.support
 
-import _root_.archery.{Entry, Point, RTree, Box}
+import _root_.archery.{Box, Entry, Point, RTree}
+
 import scala.annotation.tailrec
 
 package object archery {
